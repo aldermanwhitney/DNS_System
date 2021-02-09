@@ -4,6 +4,7 @@ import random
 
 import socket
 
+#define function named client with no parameters
 def client():
     try:
         cs = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -13,12 +14,25 @@ def client():
         exit()
         
     # Define the port on which you want to connect to the server
-    port = 50081
+    port = 50087
     localhost_addr = socket.gethostbyname(socket.gethostname())
 
     # connect to the server on local machine
-    server_binding = (localhost_addr, port)
+    # (!!!) this must be manually entered to connect to the server 
+    server_binding = ('128.6.13.175', port)
     cs.connect(server_binding)
+
+    # open and read in projtestfile.txt as a string
+    with open ("proj0testfile.txt", "r") as myfile:
+        data = myfile.read()
+
+    #send string that was read in to server
+    cs.send(data.encode('utf-8'))
+    
+    # send message to the client via command line instead
+    #msg = raw_input("Enter the message you want to send: ")
+    #msg = "Testing"
+    #cs.send(msg.encode('utf-8'))
 
     # Receive data from the server
     data_from_server=cs.recv(100)
@@ -29,12 +43,8 @@ def client():
     exit()
 
 if __name__ == "__main__":
-    #t1 = threading.Thread(name='server', target=server)
-    #t1.start()
 
-    #time.sleep(random.random() * 5)
+    #thread to run client function
     t2 = threading.Thread(name='client', target=client)
     t2.start()
-
-    #time.sleep(5)
-    print("Done.")
+    print("Main execution done.")
