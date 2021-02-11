@@ -36,7 +36,7 @@ def server():
     #get info from text file
 
     #get file object
-    f = open("/ilab/users/kje42/project1/PROJI-DNSRS.txt", "r")
+    f = open("./PROJI-DNSRS.txt", "r")
     dict = {}
     while(True):
 	#read next line
