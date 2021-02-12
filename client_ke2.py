@@ -21,12 +21,22 @@ def client():
 
 
     # Define the port on which you want to connect to the server
-    port = 50007
+    #port = 50007
+
+    #get root server hostname, root server listen port, and ts listen port
+    #from command line arguments
+    rsHostname = sys.argv[1]
+    rsListenPort = sys.argv[2]
+    tsListenPort = sys.argv[3]
+    print("rsHostname:" + rsHostname)
+    print("rsListenPort" + rsListenPort)
+    print("tsListenPort" + tsListenPort)
     localhost_addr = socket.gethostbyname(socket.gethostname())
 
 
     # connect to the server on local machine
-    server_binding = (localhost_addr, port)
+    server_binding = (rsHostname, int(rsListenPort))
+    #server_binding = (localhost_addr, int(rsListenPort))
     cs.connect(server_binding)
 
     #get info from text file
@@ -63,7 +73,6 @@ def client():
 
 
 if __name__ == "__main__":
-    time.sleep(random.random() * 5)
     t2 = threading.Thread(name='client', target=client)
     t2.start()
 

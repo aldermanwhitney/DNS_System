@@ -30,7 +30,11 @@ def server():
         print('socket open error: {}\n'.format(err))
         exit()
 
-    server_binding = ('', 50007)
+    
+    #server_binding = ('', 50087)
+    
+    rsListenPort = sys.argv[1]
+    server_binding = ('', int(rsListenPort))
     ss.bind(server_binding)
     #binding socket to port
     
