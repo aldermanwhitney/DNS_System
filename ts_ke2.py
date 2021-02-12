@@ -18,30 +18,31 @@ from client import *
 
 # (3) sends answer to client server
 
-def server():
+def TSserver():
 #server opens a socket: a method for two way communication in a program within a network
     try:
         ss = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         #1st parameter: ipv4
         #2nd parameter: tcp (transport protocol)
-        print("[RS]: Server socket created") 
+        print("[TS]: Server socket created") 
         #if successful => server socket created
     except socket.error as err:
         print('socket open error: {}\n'.format(err))
         exit()
 
+    #get TS listening port from user input argument 1
+    tsListenPort = sys.argv[1]
+    server_binding = ('', int(tsListenPort))
     
-    #server_binding = ('', 50087)
-    
-    rsListenPort = sys.argv[1]
-    server_binding = ('', int(rsListenPort))
+    #bind socket to the indicated port
     ss.bind(server_binding)
-    #binding socket to port
     
     #get info from text file
 
-    #get file object
-    f = open("./PROJI-DNSRS.txt", "r")
+    #open DNS TS file (DNS lookup table) 
+    f = open("./PROJI-DNSTS.txt", "r")
+    
+    #add to data structure (dictionary)
     dict = {}
     while(True):
 	#read next line
@@ -66,7 +67,7 @@ def server():
             else:
                 count += 1
 
-        #populate RS TABLE
+        #populate TS TABLE
         if (count == 2):
             dict[address] = ip, flag
                 
@@ -80,11 +81,11 @@ def server():
     ss.listen(1)
     #how many connections are allowed to have which is 1
     host = socket.gethostname()
-    print("[RS]: Server host name is {}".format(host))
+    print("[TS]: Server host name is {}".format(host))
     localhost_ip = (socket.gethostbyname(host))
-    print("[RS]: Server IP address is {}".format(localhost_ip))
+    print("[TS]: Server IP address is {}".format(localhost_ip))
     csockid, addr = ss.accept()
-    print ("[RS]: Got a connection request from a client at {}".format(addr))
+    print ("[TS]: Got a connection request from a client at {}".format(addr))
     #accepts the connection
     #ss.accept() => returns accepted socket and the address you're connecting to 
 
@@ -96,8 +97,7 @@ def server():
         csockid.send(msg.encode('utf-8'))
 
     if data_from_client not in dict:
-        #msg = "Error:HOST NOT FOUND"
-        msg = 
+        msg = "Error:HOST NOT FOUND"
         csockid.send(msg.encode('utf-8'))
 
     # Close the server socket
@@ -105,8 +105,8 @@ def server():
     exit()   
 
 if __name__ == "__main__":
-    t1 = threading.Thread(name='server', target=server)
+    t1 = threading.Thread(name='TSserver', target=TSserver)
     t1.start()
 
     time.sleep(5)
-    print("RS Main Execution Done.")
+    print("TS Main Execution Done.")
