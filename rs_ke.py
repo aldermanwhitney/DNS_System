@@ -123,7 +123,7 @@ def client():
     #get info from text file
 
     #get file object
-    f = open("/ilab/users/kje42/project1/PROJI-HNS.txt", "r")
+    f = open("./PROJI-HNS.txt", "r")
     while(True):
 	#read next line
         line = f.readline()
