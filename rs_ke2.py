@@ -96,8 +96,7 @@ def server():
         csockid.send(msg.encode('utf-8'))
 
     if data_from_client not in dict:
-        #msg = "Error:HOST NOT FOUND"
-        msg = 
+        msg = "Error:HOST NOT FOUND"
         csockid.send(msg.encode('utf-8'))
 
     # Close the server socket
