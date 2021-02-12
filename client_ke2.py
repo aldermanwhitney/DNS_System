@@ -42,6 +42,7 @@ def client():
         #you can access the line
         #print(line.strip())
         address = ''
+        print("Client sent:")
         for element in range(0, len(line)):
             if (line[element] != " "):
                 address += line[element]
@@ -62,12 +63,9 @@ def client():
 
 
 if __name__ == "__main__":
-    #t1 = threading.Thread(name='server', target=server)
-    #t1.start()
-
     time.sleep(random.random() * 5)
     t2 = threading.Thread(name='client', target=client)
     t2.start()
 
     time.sleep(5)
-    print("Done.")
+    print("Client Main Execution Done.")
