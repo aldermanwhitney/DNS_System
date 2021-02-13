@@ -76,7 +76,7 @@ def server():
 
 
     #client would need port to access anything
-    ss.listen(1)
+    ss.listen()
     #how many connections are allowed to have which is 1
     host = socket.gethostname()
     print("[S]: Server host name is {}".format(host))
@@ -98,7 +98,7 @@ def server():
         csockid.send(msg.encode('utf-8'))
 
     if data not in dict_ip:
-        msg = data + ' ' + dict_ip[str(data)] + ' ' + "Error:HOST NOT FOUND"
+        msg = data + ' ' + "-" + ' ' + "Error:HOST NOT FOUND"
         csockid.send(msg.encode('utf-8'))
 
     # Close the server socket
