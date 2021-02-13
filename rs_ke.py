@@ -5,6 +5,8 @@ import random
 import socket
 import sys
 import csv
+import json
+
 
 # You need to choose the appropriate data structure to store the values for each entry
 # The client always connects first to RS, sending the queried hostname as a string
@@ -36,8 +38,9 @@ def server():
     #get info from text file
 
     #get file object
-    f = open("./PROJI-DNSRS.txt", "r")
-    dict = {}
+    f = open("/ilab/users/kje42/project1/PROJI-DNSRS.txt", "r")
+    dict_ip = {}
+    dict_flag = {}
     while(True):
 	#read next line
         line = f.readline()
@@ -63,12 +66,13 @@ def server():
 
         #populate RS TABLE
         if (count == 2):
-            dict[address] = ip, flag
-                
-    
+            dict_ip[address] = ip
+            dict_flag[address] = flag
+
     #close file
     f.close
-    print(dict)
+    print(dict_ip)
+    print(dict_flag)
 
 
     #client would need port to access anything
@@ -85,13 +89,16 @@ def server():
 
     # receive and send message to the client.  
     data_from_client=csockid.recv(100)
-    print(data_from_client)
-    if data_from_client in dict:
-        msg = dict[data_from_client]
+    data = ''
+    data = data_from_client.decode()
+    data = data.rstrip()
+
+    if data in dict_ip:
+        msg = data + ' ' + dict_ip[str(data)] + ' ' + dict_flag[str(data)]
         csockid.send(msg.encode('utf-8'))
 
-    if data_from_client not in dict:
-        msg = "Error:HOST NOT FOUND"
+    if data not in dict_ip:
+        msg = data + ' ' + dict_ip[str(data)] + ' ' + "Error:HOST NOT FOUND"
         csockid.send(msg.encode('utf-8'))
 
     # Close the server socket
@@ -123,7 +130,7 @@ def client():
     #get info from text file
 
     #get file object
-    f = open("./PROJI-HNS.txt", "r")
+    f = open("/ilab/users/kje42/project1/PROJI-HNS.txt", "r")
     while(True):
 	#read next line
         line = f.readline()
@@ -132,20 +139,29 @@ def client():
             break
         #you can access the line
         #print(line.strip())
-        address = ''
+        address1 = ''
         for element in range(0, len(line)):
-            if (line[element] != " "):
-                address += line[element]
-        print(address)
-        cs.send(address.encode('utf-8'))
-    #close file
+                address1 += line[element]
+        cs.send(address1.encode('utf-8'))
+        data_from_server=cs.recv(100)
+        #100 bytes of message it can receive
+        print("[C]: Data received from server: {}".format(data_from_server.decode('utf-8')))
+        received_data = data_from_server.decode('utf-8')
+        file = open("/ilab/users/kje42/project1/RESOLVED.txt", "w") 
+        file.write(received_data) 
+        file.close() 
+        #close file
     f.close
 
 
-    # Receive data from the server
-    data_from_server=cs.recv(100)
+    # Receive data from the server if the host is in the dictionary
+    #data_from_server=cs.recv(100)
     #100 bytes of message it can receive
-    print("[C]: Data received from server: {}".format(data_from_server.decode('utf-8')))
+    #print("[C]: Data received from server: {}".format(data_from_server.decode('utf-8')))
+    #received_data = data_from_server.decode('utf-8')
+    #file = open("/ilab/users/kje42/project1/RESOLVED.txt", "w") 
+    #file.write(received_data) 
+    #file.close() 
 
     # close the client socket
     cs.close()
