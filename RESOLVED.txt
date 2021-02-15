@@ -1,1 +1,1 @@
-kill.cs.rutgers.edu 182.48.3.2 A
+www.rutgers.com 192.64.4.4 A

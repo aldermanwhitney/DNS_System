@@ -40,13 +40,17 @@ def server():
     #binding socket to port
     
     #get info from text file
-
+    
+    lastline = ''
+    line = ''
     #get file object
     f = open("./PROJI-DNSRS.txt", "r")
     dict_ip = {}
     dict_flag = {}
     while(True):
-	#read next line
+	#get last line - needed if not in table
+        lastline = line
+        #read next line
         line = f.readline()
         #if line is empty, you are done with all lines in the file
         if not line:
@@ -103,7 +107,8 @@ def server():
        csockid.send(msg.encode('utf-8'))
 
     if data not in dict_ip:
-        msg = data + ' ' + "-" + ' ' + "Error:HOST NOT FOUND"
+        #msg = data + ' ' + "-" + ' ' + "NS"
+        msg = lastline
         csockid.send(msg.encode('utf-8'))
 
     # Close the server socket
