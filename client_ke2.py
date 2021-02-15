@@ -28,9 +28,9 @@ def client():
     rsHostname = sys.argv[1]
     rsListenPort = sys.argv[2]
     tsListenPort = sys.argv[3]
-    print("rsHostname:" + rsHostname)
-    print("rsListenPort" + rsListenPort)
-    print("tsListenPort" + tsListenPort)
+    print("rsHostname: " + rsHostname)
+    print("rsListenPort " + rsListenPort)
+    print("tsListenPort " + tsListenPort)
     localhost_addr = socket.gethostbyname(socket.gethostname())
 
 
@@ -51,21 +51,26 @@ def client():
             break
         #you can access the line
         #print(line.strip())
-        address = ''
-        print("Client sent:")
+        address1 = ''
+        print("Client sent:" + address1)
         for element in range(0, len(line)):
-            if (line[element] != " "):
-                address += line[element]
-        print(address)
-        cs.send(address.encode('utf-8'))
+               address1 += line[element]
+        cs.send(address1.encode('utf-8'))
+        data_from_server=cs.recv(100)
+        #100 bytes of message it can receive
+        print("[C]: Data received from server: {}".format(data_from_server.decode('utf-8')))
+        received_data = data_from_server.decode('utf-8')
+        file = open("./RESOLVED.txt", "w") 
+        file.write(received_data) 
+        file.close() 
+    
     #close file
     f.close
 
-
-    # Receive data from the server
-    data_from_server=cs.recv(100)
+    # Receive data from the server if the host is in the dictionary
+    #data_from_server=cs.recv(100)
     #100 bytes of message it can receive
-    print("[C]: Data received from server: {}".format(data_from_server.decode('utf-8')))
+    #print("[C]: Data received from server: {}".format(data_from_server.decode('utf-8')))
 
     # close the client socket
     cs.close()

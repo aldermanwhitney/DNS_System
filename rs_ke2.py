@@ -5,6 +5,7 @@ import random
 import socket
 import sys
 import csv
+import json
 
 from client import *
 # You need to choose the appropriate data structure to store the values for each entry
@@ -42,7 +43,8 @@ def server():
 
     #get file object
     f = open("./PROJI-DNSRS.txt", "r")
-    dict = {}
+    dict_ip = {}
+    dict_flag = {}
     while(True):
 	#read next line
         line = f.readline()
@@ -68,13 +70,14 @@ def server():
 
         #populate RS TABLE
         if (count == 2):
-            dict[address] = ip, flag
+           dict_ip[address] = ip
+           dict_flag[address] = flag
                 
     
     #close file
     f.close
-    print(dict)
-
+    print(dict_ip)
+    print(dict_flag)
 
     #client would need port to access anything
     ss.listen(1)
@@ -86,17 +89,21 @@ def server():
     csockid, addr = ss.accept()
     print ("[RS]: Got a connection request from a client at {}".format(addr))
     #accepts the connection
-    #ss.accept() => returns accepted socket and the address you're connecting to 
+    #ss.accept() #=> returns accepted socket and the address you're connecting to 
 
     # receive and send message to the client.  
     data_from_client=csockid.recv(100)
-    print(data_from_client)
-    if data_from_client in dict:
-        msg = dict[data_from_client]
-        csockid.send(msg.encode('utf-8'))
+    print("[RS]: Root server recieved: " + str(data_from_client));
+    data = ''
+    data = data_from_client.decode()
+    data = data.rstrip()
 
-    if data_from_client not in dict:
-        msg = "Error:HOST NOT FOUND"
+    if data in dict_ip:
+       msg = data + ' ' + dict_ip[str(data)] + ' ' + dict_flag[str(data)]
+       csockid.send(msg.encode('utf-8'))
+
+    if data not in dict_ip:
+        msg = data + ' ' + "-" + ' ' + "Error:HOST NOT FOUND"
         csockid.send(msg.encode('utf-8'))
 
     # Close the server socket
