@@ -19,6 +19,21 @@ import json
 # (3) sends answer to client server
 
 def server():
+    #server opens a socket: a method for two way communication in a program within a network
+    try:
+        ss = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        #1st parameter: ipv4
+        #2nd parameter: tcp (transport protocol)
+        print("[S]: Server socket created") 
+        #if successful => server socket created
+    except socket.error as err:
+        print('socket open error: {}\n'.format(err))
+        exit()
+    server_binding = ('', 50007)
+    ss.bind(server_binding)
+    #binding socket to port
+    #client would need port to access anything
+   
     #get info from text file
 
     #get file object
@@ -57,51 +72,51 @@ def server():
     f.close
     print(dict_ip)
     print(dict_flag)
-    while True:
-            #server opens a socket: a method for two way communication in a program within a network
-            try:
-                ss = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-                #1st parameter: ipv4
-                #2nd parameter: tcp (transport protocol)
-                print("[S]: Server socket created") 
-                #if successful => server socket created
-            except socket.error as err:
-                print('socket open error: {}\n'.format(err))
-                exit()
+    f2 = open("/ilab/users/kje42/project1/PROJI-HNS.txt", "r")
+    while(1):
+        line = f2.readline()
+        #if line is empty, you are done with all lines in the file
+        if not line:
+            break
+        #you can access the line
+        #print(line.strip())
+        address1 = ''
+        for element in range(0, len(line)):
+            address1 += line[element]
+        ss.listen(5)
+        #how many connections are allowed to have which is 1
+        host = socket.gethostname()
+        print("[S]: Server host name is {}".format(host))
+        localhost_ip = (socket.gethostbyname(host))
+        print("[S]: Server IP address is {}".format(localhost_ip))
+        csockid, addr = ss.accept()
+        print ("[S]: Got a connection request from a client at {}".format(addr))
+        #accepts the connection
+         #ss.accept() => returns accepted socket and the address you're connecting to 
 
-            server_binding = ('', 50007)
-            ss.bind(server_binding)
-            #binding socket to port
+        # receive and send message to the client.  
+        data_from_client=csockid.recv(100)
+        data = ''
+        data = data_from_client.decode()
+        data = data.rstrip()
 
-            #client would need port to access anything
-            ss.listen()
-            #how many connections are allowed to have which is 1
-            host = socket.gethostname()
-            print("[S]: Server host name is {}".format(host))
-            localhost_ip = (socket.gethostbyname(host))
-            print("[S]: Server IP address is {}".format(localhost_ip))
-            csockid, addr = ss.accept()
-            print ("[S]: Got a connection request from a client at {}".format(addr))
-            #accepts the connection
-            #ss.accept() => returns accepted socket and the address you're connecting to 
+        if (data == "stop"):
+            ss.close()
+            print('STOP')
+            break
 
-            # receive and send message to the client.  
-            data_from_client=csockid.recv(100)
-            data = ''
-            data = data_from_client.decode()
-            data = data.rstrip()
+        if data in dict_ip:
+            msg = data + ' ' + dict_ip[str(data)] + ' ' + dict_flag[str(data)]
+            csockid.send(msg.encode('utf-8'))
 
-            if data in dict_ip:
-                msg = data + ' ' + dict_ip[str(data)] + ' ' + dict_flag[str(data)]
-                csockid.send(msg.encode('utf-8'))
+        if data not in dict_ip:
+            msg = data + ' ' + "-" + ' ' + "Error:HOST NOT FOUND"
+            csockid.send(msg.encode('utf-8'))
 
-            if data not in dict_ip:
-                msg = data + ' ' + "-" + ' ' + "Error:HOST NOT FOUND"
-                csockid.send(msg.encode('utf-8'))
-    #Close the server socket
-    if (data == "stop"):
-        ss.close()
-exit()  
+        print('rs1') 
+    print('rs2')
+    f2.close() 
+    exit()  
 
     # Close the server socket
     #ss.close()
@@ -112,50 +127,50 @@ def client():
     #data = fileObject.read()
     #print(data)
     #get info from text file
-    while(True):
-     try:
+    try:
         cs = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         print("[C]: Client socket created")
-     except socket.error as err:
+    except socket.error as err:
         print('socket open error: {} \n'.format(err))
         exit()
-
     # Define the port on which you want to connect to the server
-     port = 50007
-     localhost_addr = socket.gethostbyname(socket.gethostname())
+    port = 50007
+    localhost_addr = socket.gethostbyname(socket.gethostname())
 
-     # connect to the server on local machine
-     server_binding = (localhost_addr, port)
-     cs.connect(server_binding)
-     #get file object
-     f = open("/ilab/users/kje42/project1/PROJI-HNS.txt", "r")
-     while(True):    
-            #read next line
-            line = f.readline()
-            #if line is empty, you are done with all lines in the file
-            if not line:
-                break
-            #you can access the line
-            #print(line.strip())
-            address1 = ''
-            for element in range(0, len(line)):
-                    address1 += line[element]
-            print(address1)
-            cs.send(address1.encode('utf-8'))
-            data_from_server=cs.recv(100)
-            #100 bytes of message it can receive
-            print("[C]: Data received from server: {}".format(data_from_server.decode('utf-8')))
-            received_data = data_from_server.decode('utf-8')
-            file = open("/ilab/users/kje42/project1/RESOLVED.txt", "w") 
-            file.write(received_data)  
-            #close file
-     f.close
-     file.close()
-     address1 = 'stop'
-     print(address1)
-     cs.send(address1.encode('utf-8'))
+    # connect to the server on local machine
+    server_binding = (localhost_addr, port)
+    cs.connect(server_binding)
+    f1 = open("/ilab/users/kje42/project1/PROJI-HNS.txt", "r")
+    file = open("/ilab/users/kje42/project1/RESOLVED.txt", "w")    
+    while(True): 
+        #get file object
+        #read next line
+        line = f1.readline()
+        #if line is empty, you are done with all lines in the file
+        if not line:
+            break
+        #you can access the line
+        #print(line.strip())
+        address1 = ''
+        for element in range(0, len(line)):
+            address1 += line[element]
+        print(address1)
+        cs.send(address1.encode('utf-8'))
+        data_from_server=cs.recv(100)
+        #100 bytes of message it can receive
+        print("[C]: Data received from server: {}".format(data_from_server.decode('utf-8')))
+        received_data = data_from_server.decode('utf-8')
+        file.write(received_data)
+        print('client1') 
+        #close file 
+    print('client2')
+    address1 = 'stop'
+    print(address1)
+    cs.send(address1.encode('utf-8'))
     cs.close()
-exit()
+    f1.close
+    file.close()
+    exit()
 
     # Receive data from the server if the host is in the dictionary
     #data_from_server=cs.recv(100)
@@ -170,7 +185,7 @@ exit()
     #cs.close()
     #exit()
 
-if __name__ == "__main__":
+if __name__ == "__main__":    
     t1 = threading.Thread(name='server', target=server)
     t1.start()
 
