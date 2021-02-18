@@ -82,38 +82,50 @@ def server():
     f.close
     print(dict_ip)
     print(dict_flag)
+    f2 = open("/ilab/users/kje42/project1/PROJI-HNS.txt", "r")
+    while(1):
+        line = f2.readline()
+        #if line is empty, you are done with all lines in the file
+        if not line:
+            break
+        #you can access the line
+        #print(line.strip())
+        address1 = ''
+        for element in range(0, len(line)):
+            address1 += line[element]
+        ss.listen(5)
+        #how many connections are allowed to have which is 1
+        host = socket.gethostname()
+        print("[S]: Server host name is {}".format(host))
+        localhost_ip = (socket.gethostbyname(host))
+        print("[S]: Server IP address is {}".format(localhost_ip))
+        csockid, addr = ss.accept()
+        print ("[S]: Got a connection request from a client at {}".format(addr))
+        #accepts the connection
+         #ss.accept() => returns accepted socket and the address you're connecting to 
+        # receive and send message to the client.  
+        data_from_client=csockid.recv(100)
+        data = ''
+        data = data_from_client.decode()
+        data = data.rstrip()
 
-    #client would need port to access anything
-    ss.listen(1)
-    #how many connections are allowed to have which is 1
-    host = socket.gethostname()
-    print("[RS]: Server host name is {}".format(host))
-    localhost_ip = (socket.gethostbyname(host))
-    print("[RS]: Server IP address is {}".format(localhost_ip))
-    csockid, addr = ss.accept()
-    print ("[RS]: Got a connection request from a client at {}".format(addr))
-    #accepts the connection
-    #ss.accept() #=> returns accepted socket and the address you're connecting to 
+        if (data == "stop"):
+            ss.close()
+            print('STOP')
+            break
 
-    # receive and send message to the client.  
-    data_from_client=csockid.recv(100)
-    print("[RS]: Root server recieved: " + str(data_from_client));
-    data = ''
-    data = data_from_client.decode()
-    data = data.rstrip()
+        if data in dict_ip:
+            msg = data + ' ' + dict_ip[str(data)] + ' ' + dict_flag[str(data)]
+            csockid.send(msg.encode('utf-8'))
 
-    if data in dict_ip:
-       msg = data + ' ' + dict_ip[str(data)] + ' ' + dict_flag[str(data)]
-       csockid.send(msg.encode('utf-8'))
+        if data not in dict_ip:
+            msg = data + ' ' + "-" + ' ' + "Error:HOST NOT FOUND"
+            csockid.send(msg.encode('utf-8'))
 
-    if data not in dict_ip:
-        #msg = data + ' ' + "-" + ' ' + "NS"
-        msg = lastline
-        csockid.send(msg.encode('utf-8'))
-
-    # Close the server socket
-    ss.close()
-    exit()   
+        print('rs1') 
+    print('rs2')
+    f2.close() 
+    exit()    
 
 if __name__ == "__main__":
     t1 = threading.Thread(name='server', target=server)
