@@ -82,7 +82,7 @@ def server():
     f.close
     print(dict_ip)
     print(dict_flag)
-    f2 = open("/ilab/users/kje42/project1/PROJI-HNS.txt", "r")
+    f2 = open("./PROJI-HNS.txt", "r")
     while(1):
         line = f2.readline()
         #if line is empty, you are done with all lines in the file
@@ -104,25 +104,27 @@ def server():
         #accepts the connection
          #ss.accept() => returns accepted socket and the address you're connecting to 
         # receive and send message to the client.  
-        data_from_client=csockid.recv(100)
-        data = ''
-        data = data_from_client.decode()
-        data = data.rstrip()
+        while(1):
+            data_from_client=csockid.recv(100)
+            data = ''
+            data = data_from_client.decode()
+            data = data.rstrip()
+            print("[S]: Server received:" + data)
 
-        if (data == "stop"):
-            ss.close()
-            print('STOP')
-            break
+            if (data == "stop"):
+                ss.close()
+                print('STOP')
+                break
 
-        if data in dict_ip:
-            msg = data + ' ' + dict_ip[str(data)] + ' ' + dict_flag[str(data)]
-            csockid.send(msg.encode('utf-8'))
+            if data in dict_ip:
+                msg = data + ' ' + dict_ip[str(data)] + ' ' + dict_flag[str(data)]
+                csockid.send(msg.encode('utf-8'))
 
-        if data not in dict_ip:
-            msg = data + ' ' + "-" + ' ' + "Error:HOST NOT FOUND"
-            csockid.send(msg.encode('utf-8'))
+            if data not in dict_ip:
+                msg = data + ' ' + "-" + ' ' + "Error:HOST NOT FOUND"
+                csockid.send(msg.encode('utf-8'))
 
-        print('rs1') 
+            print('rs1') 
     print('rs2')
     f2.close() 
     exit()    

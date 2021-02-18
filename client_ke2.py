@@ -25,7 +25,7 @@ def client():
     cs.connect(server_binding)
     f = open("./PROJI-HNS.txt", "r")
     file = open("./RESOLVED.txt", "w")
-    count1 = len(open("/ilab/users/kje42/project1/PROJI-HNS.txt").readlines(  ))
+    count1 = len(open("./PROJI-HNS.txt").readlines(  ))
     print("COUNT1") 
     print(count1)
     while(True):
