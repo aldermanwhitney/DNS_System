@@ -58,11 +58,11 @@ def TSserver():
         for element in range(0, len(line)):
             if (line[element] != " "):
                 if (count == 0):
-                    address += line[element] 
+                    address += line[element].lower()
                 if (count == 1):
                     ip += line[element] 
                 if (count == 2):
-                    flag += line[element]
+                    flag += line[element].upper()
             else:
                 count += 1
 
@@ -96,6 +96,7 @@ def TSserver():
         data = ''
         data = data_from_client.decode()
         data = data.rstrip()
+        data = data.lower()
 
         if data in dict_ip:
             msg = data + ' ' + dict_ip[str(data)] + ' ' + dict_flag[str(data)]

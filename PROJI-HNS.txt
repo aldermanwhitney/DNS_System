@@ -1,5 +1,5 @@
 mx.rutgers.edu
-www.ibm.com
+www.IBM.com
 www.google.com
 www.rutgers.com
 www.ibm.com

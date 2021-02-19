@@ -49,12 +49,13 @@ def server():
     dict_flag = {}
     while(True):
 	#get last line - needed if not in table
-        lastline = line
         #read next line
         line = f.readline()
         #if line is empty, you are done with all lines in the file
         if not line:
             break
+        if "- NS" in line:
+            lastline = line
         #you can access the line
         #print(line.strip())
         address = ''
@@ -64,11 +65,11 @@ def server():
         for element in range(0, len(line)):
             if (line[element] != " "):
                 if (count == 0):
-                    address += line[element] 
+                    address += line[element].lower() 
                 if (count == 1):
-                    ip += line[element] 
+                    ip += line[element]
                 if (count == 2):
-                    flag += line[element]
+                    flag += line[element].upper()
             else:
                 count += 1
 
@@ -113,6 +114,7 @@ def server():
             data = ''
             data = data_from_client.decode()
             data = data.rstrip()
+            data = data.lower()
             print("[S]: Server received:" + data)
 
             if (data == "stop"):
