@@ -24,8 +24,8 @@ def client():
     server_binding = (rsHostname, int(rsListenPort))
     cs.connect(server_binding)
     f = open("./PROJI-HNS.txt", "r")
-    file = open("./RESOLVED.txt", "w")
     count1 = len(open("./PROJI-HNS.txt").readlines(  ))
+    file = open("./RESOLVED.txt", "w")
     print("COUNT1") 
     print(count1)
     while(True):
@@ -41,7 +41,7 @@ def client():
         data_from_server=cs.recv(100)
         print("[C]: Data received from root server: {}".format(data_from_server.decode('utf-8')))
         received_data = data_from_server.decode('utf-8')
-        file.write(received_data) 
+        file.write(received_data + "\n") 
      
 
         # This is the case where the client recieved a message from
@@ -69,7 +69,9 @@ def client():
             print("[C]: Data received from TS server: {}".format(data_from_TSserver.decode('utf-8')))   
             #write response into RESOLVED.txt file
             file = open("./RESOLVED.txt", "w") 
-            file.write(data_from_TSserver) 
+            file.write(data_from_TSserver)
+    address1 = 'stop' 
+    cs.send(address1.encode('utf-8'))
     file.close()      
     f.close
     cs.close()

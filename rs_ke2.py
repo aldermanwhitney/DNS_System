@@ -93,7 +93,7 @@ def server():
         address1 = ''
         for element in range(0, len(line)):
             address1 += line[element]
-        ss.listen(5)
+        ss.listen(2)
         #how many connections are allowed to have which is 1
         host = socket.gethostname()
         print("[S]: Server host name is {}".format(host))
