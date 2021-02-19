@@ -84,27 +84,29 @@ def TSserver():
     print("[TS]: TS Server host name is {}".format(host))
     localhost_ip = (socket.gethostbyname(host))
     print("[TS]: TS Server IP address is {}".format(localhost_ip))
-    csockid, addr = ss.accept()
-    print ("[TS]: Got a connection request from a client at {}".format(addr))
-    #accepts the connection
-    #ss.accept() #=> returns accepted socket and the address you're connecting to 
+    
+    while(True):
+        csockid, addr = ss.accept()
+        print ("[TS]: Got a connection request from a client at {}".format(addr))
+        #accepts the connection
+        #ss.accept() #=> returns accepted socket and the address you're connecting to 
+        # receive and send message to the client.  
+        data_from_client=csockid.recv(100)
+        print("[TS]: TS server recieved: " + str(data_from_client));
+        data = ''
+        data = data_from_client.decode()
+        data = data.rstrip()
 
-    # receive and send message to the client.  
-    data_from_client=csockid.recv(100)
-    print("[TS]: TS server recieved: " + str(data_from_client));
-    data = ''
-    data = data_from_client.decode()
-    data = data.rstrip()
+        if data in dict_ip:
+            msg = data + ' ' + dict_ip[str(data)] + ' ' + dict_flag[str(data)]
+            csockid.send(msg.encode('utf-8'))
 
-    if data in dict_ip:
-       msg = data + ' ' + dict_ip[str(data)] + ' ' + dict_flag[str(data)]
-       csockid.send(msg.encode('utf-8'))
-
-    if data not in dict_ip:
-        msg = data + ' ' + "-" + ' ' + "Error:HOST NOT FOUND"
-        csockid.send(msg.encode('utf-8'))
+        if data not in dict_ip:
+            msg = data + ' ' + "-" + ' ' + "Error:HOST NOT FOUND"
+            csockid.send(msg.encode('utf-8'))
 
     # Close the server socket
+    print("closing TS socket")
     ss.close()
     exit()   
 

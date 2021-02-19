@@ -42,13 +42,12 @@ def client():
         print("[C]: Data received from root server: {}".format(data_from_server.decode('utf-8')))
         received_data = data_from_server.decode('utf-8')
         file.write(received_data + "\n") 
-     
-
         # This is the case where the client recieved a message from
         # the root server indicating that the IP address is not known by the root
         # ie localhost - NS
         #must forward request to TS
-        suffix = "NS";                   
+        suffix = "NS";
+        print("here")
         if suffix in received_data:
             try:
                 cts = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -68,8 +67,8 @@ def client():
             data_from_TSserver=cts.recv(100)
             print("[C]: Data received from TS server: {}".format(data_from_TSserver.decode('utf-8')))   
             #write response into RESOLVED.txt file
-            file = open("./RESOLVED.txt", "w") 
-            file.write(data_from_TSserver)
+            #file = open("./RESOLVED.txt", "w") 
+            file.write(data_from_TSserver + "\n")
     address1 = 'stop' 
     cs.send(address1.encode('utf-8'))
     file.close()      

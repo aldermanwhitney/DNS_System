@@ -126,7 +126,8 @@ def server():
                 csockid.send(msg.encode('utf-8'))
 
             if data not in dict_ip:
-                msg = data + ' ' + "-" + ' ' + "Error:HOST NOT FOUND"
+                #msg = data + ' ' + "-" + ' ' + "NS"
+                msg = lastline
                 csockid.send(msg.encode('utf-8'))
             print('rs1') 
     print('rs2')

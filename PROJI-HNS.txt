@@ -1,7 +1,6 @@
-www.rutgers.com
-mx.rutgers.com
-www.ibm.edu
-google.com
-www.google.com
-www.ibm.com
 mx.rutgers.edu
+www.ibm.com
+www.google.com
+www.rutgers.com
+www.ibm.com
+www.rutgers.edu

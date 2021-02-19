@@ -1,3 +1,15 @@
-www.rutgers.com - Error:HOST NOT FOUNDmx.rutgers.com - Error:HOST NOT FOUNDwww.ibm.edu - Error:HOST NOT FOUNDgoogle.com - Error:HOST NOT FOUNDwww.google.com 8.6.4.2 A
-www.ibm.com 64.42.3.4 A
 mx.rutgers.edu 192.64.4.2 A
+
+www.ibm.com 64.42.3.4 A
+
+www.google.com 8.6.4.2 A
+
+cd.cs.rutgers.edu - NS
+
+www.rutgers.com 192.64.4.4 A
+
+www.ibm.com 64.42.3.4 A
+
+cd.cs.rutgers.edu - NS
+
+www.rutgers.edu - Error:HOST NOT FOUND
