@@ -83,7 +83,11 @@ def server():
     print(dict_ip)
     print(dict_flag)
     f2 = open("./PROJI-HNS.txt", "r")
+    count = 0
     while(1):
+        if (count == 1):
+            print(count)
+            break
         line = f2.readline()
         #if line is empty, you are done with all lines in the file
         if not line:
@@ -114,6 +118,7 @@ def server():
             if (data == "stop"):
                 ss.close()
                 print('STOP')
+                count = 1
                 break
 
             if data in dict_ip:
@@ -123,7 +128,6 @@ def server():
             if data not in dict_ip:
                 msg = data + ' ' + "-" + ' ' + "Error:HOST NOT FOUND"
                 csockid.send(msg.encode('utf-8'))
-
             print('rs1') 
     print('rs2')
     f2.close() 
