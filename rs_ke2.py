@@ -83,57 +83,61 @@ def server():
     f.close
     print(dict_ip)
     print(dict_flag)
-    f2 = open("./PROJI-HNS.txt", "r")
-    count = 0
-    while(1):
-        if (count == 1):
-            print(count)
-            break
-        line = f2.readline()
+    #f2 = open("./PROJI-HNS.txt", "r")
+    #count = 0
+    #while(1):
+    #if (count == 1):
+     #       print(count)
+      #      break
+       # line = f2.readline()
         #if line is empty, you are done with all lines in the file
-        if not line:
-            break
+      #  if not line:
+       #     break
         #you can access the line
         #print(line.strip())
-        address1 = ''
-        for element in range(0, len(line)):
-            address1 += line[element]
-        ss.listen(2)
+       # address1 = ''
+       # for element in range(0, len(line)):
+        #    address1 += line[element]
+    ss.listen(2)
         #how many connections are allowed to have which is 1
-        host = socket.gethostname()
-        print("[S]: Server host name is {}".format(host))
-        localhost_ip = (socket.gethostbyname(host))
-        print("[S]: Server IP address is {}".format(localhost_ip))
-        csockid, addr = ss.accept()
-        print ("[S]: Got a connection request from a client at {}".format(addr))
+    host = socket.gethostname()
+    print("[S]: Server host name is {}".format(host))
+    localhost_ip = (socket.gethostbyname(host))
+    print("[S]: Server IP address is {}".format(localhost_ip))
+        
+    #while(1):
+    csockid, addr = ss.accept()
+    print ("[S]: Got a connection request from a client at {}".format(addr))
         #accepts the connection
          #ss.accept() => returns accepted socket and the address you're connecting to 
         # receive and send message to the client.  
-        while(1):
-            data_from_client=csockid.recv(100)
-            data = ''
-            data = data_from_client.decode()
-            data = data.rstrip()
-            data = data.lower()
-            print("[S]: Server received:" + data)
+     
+    while(True):
+        data_from_client=csockid.recv(100)
+        data = ''
+        data = data_from_client.decode()
+        data = data.rstrip()
+        data = data.lower()
+        print("[S]: Server received:" + data)
 
-            if (data == "stop"):
-                ss.close()
-                print('STOP')
-                count = 1
-                break
+        if (data == "stop"):
+            ss.close()
+            print('STOP')
+            count = 1
+            break
 
-            if data in dict_ip:
-                msg = data + ' ' + dict_ip[str(data)] + ' ' + dict_flag[str(data)]
-                csockid.send(msg.encode('utf-8'))
+        if data in dict_ip:
+             msg = data + ' ' + dict_ip[str(data)] + ' ' + dict_flag[str(data)]
+             csockid.send(msg.encode('utf-8'))
 
-            if data not in dict_ip:
-                #msg = data + ' ' + "-" + ' ' + "NS"
-                msg = lastline
-                csockid.send(msg.encode('utf-8'))
+        if data not in dict_ip:
+            #msg = data + ' ' + "-" + ' ' + "NS"
+            msg = lastline
+            csockid.send(msg.encode('utf-8'))
             print('rs1') 
+
     print('rs2')
-    f2.close() 
+    #f2.close() 
     exit()    
 
 if __name__ == "__main__":
